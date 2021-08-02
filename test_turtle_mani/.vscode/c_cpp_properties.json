@@ -18,6 +18,7 @@
         "/home/won/catkin_ws/src/open_manipulator/open_manipulator_controller/include/**",
         "/home/won/catkin_ws/src/open_manipulator/open_manipulator_libs/include/**",
         "/home/won/catkin_ws/src/open_manipulator/open_manipulator_teleop/include/**",
+        "/home/won/catkin_ws/src/AutonomousShippingRobot/openmanipulator/include/**",
         "/home/won/catkin_ws/src/robotis_manipulator/include/**",
         "/home/won/catkin_ws/src/2020AutoDeliveryRobot/test_turtle_mani/include/**",
         "/home/won/catkin_ws/src/turtlebot3_manipulation/turtlebot3_manipulation_bringup/include/**",
