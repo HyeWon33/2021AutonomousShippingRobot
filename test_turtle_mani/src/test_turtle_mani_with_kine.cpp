@@ -11,7 +11,7 @@ int Pick[5] = {1,3,2,5};
 int Place[5] = {4,1,2,5};
 
 string place;
-string pick = "pick";
+string pick;
 int cnt;
 bool fin_call = true;
 

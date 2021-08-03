@@ -9,6 +9,7 @@ std::vector<double> kinematic_pose_sub;
 ros::Publisher pub_;
 ros::Publisher pubb;
 ros::Publisher error_pub;
+bool arrive_home;
 
 int check_mode;
 
