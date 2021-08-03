@@ -167,12 +167,7 @@ void OpenMani::updateRobotState()
 void OpenMani::demoSequence()
 {
 	std::vector<double> joint_angle;
-	std::vector<double> kinematics_position;
-	std::vector<double> kinematics_orientation;
 	std::vector<double> gripper_value;
-	int add_time = 0;
-	int fin = 0;
-
 	bool b;
 
 	std_msgs::Bool error;
@@ -213,7 +208,7 @@ void OpenMani::demoSequence()
 
     if(check_mode == 3)
 	{
-        // ROS_INFO("move");
+        ROS_INFO("move");
 		// kinematic_pose_sub.clear();
         // kinematic_pose_sub.push_back(0.164);
         // kinematic_pose_sub.push_back(0.000); 
@@ -230,11 +225,14 @@ void OpenMani::demoSequence()
 			check_mode = 3;
 			
 		}
+		else if(b == true){
 
-		ROS_INFO("move_to_aruco");
-        ros::Duration(2.0).sleep();
+			ROS_INFO("move_to_aruco");
+			ros::Duration(2.0).sleep();
 
-        pubb.publish(T);
+			pubb.publish(T);
+
+		}
 	}
 
 	if(check_mode == 4)
@@ -308,7 +306,7 @@ int main(int argc, char **argv){
 	// kinematic_pose_sub.push_back(0.0); 
 	// kinematic_pose_sub.push_back(0.0);
 
-	ros::Subscriber sub_ = nh.subscribe("a_about_n_pos", 10, PoseCallback); //sub aruco xyz
+	ros::Subscriber sub_ = nh.subscribe("a_about_m_pos", 10, PoseCallback); //sub aruco xyz
 
 	ros::Timer publish_timer = nh.createTimer(ros::Duration(1.3), &OpenMani::publishCallback, &OpenMani);
 	

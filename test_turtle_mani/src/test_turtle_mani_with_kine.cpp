@@ -10,8 +10,8 @@ using namespace std;
 int Pick[5] = {1,3,2,5};
 int Place[5] = {4,1,2,5};
 
-string place = "place";
-string pick;
+string place;
+string pick = "pick";
 int cnt;
 bool fin_call = true;
 
@@ -73,7 +73,7 @@ int main(int argc, char **argv){
                 cnt++;
             }
 
-            ros::Duration(2.0).sleep();
+            ros::Duration(3.0).sleep();
         
             chatter_pub.publish(check_num);
             ROS_INFO("%d", check_num);
@@ -97,7 +97,7 @@ int main(int argc, char **argv){
                 cnt++;
             }
 
-            ros::Duration(2.0).sleep();
+            ros::Duration(3.0).sleep();
         
             chatter_pub.publish(check_num);
             ROS_INFO("%d", check_num);
