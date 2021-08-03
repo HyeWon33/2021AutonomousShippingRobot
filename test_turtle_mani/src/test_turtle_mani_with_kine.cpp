@@ -9,17 +9,11 @@ using namespace std;
 
 int Pick[5] = {1,3,2,5};
 int Place[5] = {4,1,2,5};
-bool start_act = true;
+
 string place;
 string pick;
 int cnt;
 bool fin_call = true;
-
-void movemove(const std_msgs::Bool& allow_to_act){
-
-	start_act = allow_to_act.data;
-
-}
 
 void which(const std_msgs::String& place_or_pick){
 
@@ -48,13 +42,19 @@ int main(int argc, char **argv){
 
 	ros::NodeHandle nh;
 
-	ros::Publisher chatter_pub = nh.advertise<std_msgs::Int32>("check_mode", 1000);
+	ros::Publisher chatter_pub = nh.advertise<std_msgs::Int32>("check_mode", 100);
+    ros::Publisher fin_call_pub = nh.advertise<std_msgs::Bool>("fin_call_pub", 100);
 	
-	ros::Subscriber sub1 = nh.subscribe("mode", 10, movemove);
 	ros::Subscriber sub2 = nh.subscribe("which", 10, which);
     ros::Subscriber sub3 = nh.subscribe("fin_act", 10, fin_act_call);
 
+    std_msgs::Bool fin_act;
+    fin_act.data = false;
+
+
 	std_msgs::Int32 check_num;
+
+    
 	ros::Rate loop_rate(0.5);
 
 	while(ros::ok()){
@@ -62,9 +62,9 @@ int main(int argc, char **argv){
         if(pick == "pick"){
             
             if(fin_call){
-                
 
                 if(cnt == 5){
+                    fin_act.data = true;
                     cnt = 0;
                 }
                 
@@ -88,6 +88,7 @@ int main(int argc, char **argv){
     
 
                 if(cnt == 5){
+                    fin_act.data = true;
                     cnt = 0;
                 }
                 
