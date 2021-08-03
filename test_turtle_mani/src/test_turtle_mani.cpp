@@ -8,6 +8,7 @@ using namespace std;
 std::vector<double> kinematic_pose_sub;
 ros::Publisher pub_;
 ros::Publisher pubb;
+ros::Publisher error_pub;
 bool arrive_home;
 
 int check_mode;
@@ -171,17 +172,18 @@ void OpenMani::demoSequence()
 	std::vector<double> gripper_value;
 	int add_time = 0;
 	int fin = 0;
-	std_msgs::Bool fin_pick_up;
-	std_msgs::Bool fin_mani;
-	std_msgs::Bool mani_plan;
-	std_msgs::Bool mani_error_plan;
+
 	bool b;
+
+	std_msgs::Bool error;
+	error.data = false;
 
     std_msgs::Bool T;
     T.data = true;
 
 	ros::Duration(3.0).sleep();
-    
+
+
 	if(check_mode == 0){
 		ROS_INFO("wait 0");
 		pubb.publish(T);
@@ -218,6 +220,17 @@ void OpenMani::demoSequence()
         // kinematic_pose_sub.push_back(0.209);
 
         b = setTaskSpacePath(kinematic_pose_sub, 2.0);
+
+		if (b==false){
+			ROS_INFO("mani_error_pub");
+			
+			error_pub.publish(error);
+			kinematic_pose_sub.clear();
+
+			check_mode = 3;
+			
+		}
+
 		ROS_INFO("move_to_aruco");
         ros::Duration(2.0).sleep();
 
@@ -306,6 +319,8 @@ int main(int argc, char **argv){
 	pub_ = nh.advertise<geometry_msgs::Pose>("mani_pose", 10); //arm xyz pub
 
     pubb = nh.advertise<std_msgs::Bool>("fin_act", 10);
+
+	error_pub = nh.advertise<std_msgs::Bool>("mani_error", 10);
 	
 	while (ros::ok())
 	{
