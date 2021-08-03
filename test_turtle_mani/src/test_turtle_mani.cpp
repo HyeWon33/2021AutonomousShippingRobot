@@ -314,7 +314,7 @@ int main(int argc, char **argv){
 
 	
 	
-	pub_ = nh.advertise<geometry_msgs::Pose>("mani_pose", 10); //arm xyz pub
+	pub_ = nh.advertise<geometry_msgs::Pose>("mani_pos", 10); //arm xyz pub
 
     pubb = nh.advertise<std_msgs::Bool>("fin_act", 10);
 
