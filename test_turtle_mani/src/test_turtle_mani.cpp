@@ -187,20 +187,6 @@ void OpenMani::demoSequence()
 		pubb.publish(T);
 	}
 
-	if(check_mode == 5){
-        ROS_INFO("zero");
-
-        joint_angle.push_back(0.000);
-        joint_angle.push_back(-1.000);
-        joint_angle.push_back(0.321);
-        joint_angle.push_back(0.707);
-        setJointSpacePath(joint_angle, 2.0);
-        ROS_INFO("zero_pose");
-        ros::Duration(2.0).sleep();
-        
-        pubb.publish(T);
-    }
-
 	if(check_mode == 1){
         
         gripper_value.push_back(0.01);
@@ -225,11 +211,11 @@ void OpenMani::demoSequence()
 
     if(check_mode == 3)
 	{
-        ROS_INFO("move");
-		kinematic_pose_sub.clear();
-        kinematic_pose_sub.push_back(0.164);
-        kinematic_pose_sub.push_back(0.000); 
-        kinematic_pose_sub.push_back(0.209);
+        // ROS_INFO("move");
+		// kinematic_pose_sub.clear();
+        // kinematic_pose_sub.push_back(0.164);
+        // kinematic_pose_sub.push_back(0.000); 
+        // kinematic_pose_sub.push_back(0.209);
 
         b = setTaskSpacePath(kinematic_pose_sub, 2.0);
 		ROS_INFO("move_to_aruco");
@@ -251,6 +237,21 @@ void OpenMani::demoSequence()
 
         pubb.publish(T);
 	}	
+
+	if(check_mode == 5){
+        ROS_INFO("zero");
+
+        joint_angle.push_back(0.000);
+        joint_angle.push_back(-1.000);
+        joint_angle.push_back(0.321);
+        joint_angle.push_back(0.707);
+        setJointSpacePath(joint_angle, 2.0);
+        ROS_INFO("zero_pose");
+        ros::Duration(2.0).sleep();
+        
+        pubb.publish(T);
+    }
+
 }
 
 void OpenMani::publishCallback(const ros::TimerEvent&)
@@ -262,7 +263,16 @@ void OpenMani::publishCallback(const ros::TimerEvent&)
 		demoSequence();
 }
 
-void PoseCallback(const std_msgs::Int32& mgs)
+void PoseCallback(const geometry_msgs::Pose &msg){
+
+	kinematic_pose_sub.clear();
+
+	kinematic_pose_sub.push_back(msg.position.x);
+	kinematic_pose_sub.push_back(msg.position.y); 
+	kinematic_pose_sub.push_back(msg.position.z);
+}
+
+void checkmode(const std_msgs::Int32& mgs)
 {
 	check_mode = mgs.data;
 	ROS_INFO("check_mode : %d", check_mode);
@@ -279,19 +289,21 @@ int main(int argc, char **argv){
 		return false;
 	
 	ros::NodeHandle nh("");
-	
-	kinematic_pose_sub.clear();
-	kinematic_pose_sub.push_back(0.0);
-	kinematic_pose_sub.push_back(0.0); 
-	kinematic_pose_sub.push_back(0.0);
+
+	// kinematic_pose_sub.clear();
+	// kinematic_pose_sub.push_back(0.0);
+	// kinematic_pose_sub.push_back(0.0); 
+	// kinematic_pose_sub.push_back(0.0);
+
+	ros::Subscriber sub_ = nh.subscribe("a_about_n_pos", 10, PoseCallback); //sub aruco xyz
 
 	ros::Timer publish_timer = nh.createTimer(ros::Duration(1.3), &OpenMani::publishCallback, &OpenMani);
 	
-	ros::Subscriber sub = nh.subscribe("check_mode", 10, PoseCallback);
+	ros::Subscriber sub = nh.subscribe("check_mode", 10, checkmode);
 
 	
 	
-	pub_ = nh.advertise<geometry_msgs::Pose>("mani_pose", 10);
+	pub_ = nh.advertise<geometry_msgs::Pose>("mani_pose", 10); //arm xyz pub
 
     pubb = nh.advertise<std_msgs::Bool>("fin_act", 10);
 	
