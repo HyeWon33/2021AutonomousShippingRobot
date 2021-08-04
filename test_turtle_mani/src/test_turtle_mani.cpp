@@ -50,9 +50,6 @@ bool OpenMani::setTaskSpacePath(std::vector<double> kinematics_pose, double path
 		target_pose.position.x = kinematics_pose.at(0);
 		target_pose.position.y = kinematics_pose.at(1);
 		target_pose.position.z = kinematics_pose.at(2);
-		target_pose.orientation.x = 0;
-		target_pose.orientation.y = 0;
-		target_pose.orientation.z = 0;
 		
 		move_group_->setPositionTarget(
 			target_pose.position.x,
