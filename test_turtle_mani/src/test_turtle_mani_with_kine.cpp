@@ -17,29 +17,18 @@ bool fin_call = true;
 
 void which(const std_msgs::String& place_or_pick){
 
-	if(place_or_pick.data == "pick"){
-
-		pick =  place_or_pick.data;
-
-	}
-	else if(place_or_pick.data == "place"){
-
-		place =  place_or_pick.data;
-
-	}
-
+	if(place_or_pick.data == "pick") pick =  place_or_pick.data;
+	else if(place_or_pick.data == "place") place =  place_or_pick.data;
 }
 
 void fin_act_call(const std_msgs::Bool& msg){
 
     fin_call = msg.data;
-
 }
 
 int main(int argc, char **argv){
     
 	ros::init(argc, argv,"pub_check_mode_num");
-
 	ros::NodeHandle nh;
 
 	ros::Publisher chatter_pub = nh.advertise<std_msgs::Int32>("check_mode", 100);
@@ -51,23 +40,21 @@ int main(int argc, char **argv){
     std_msgs::Bool fin_act;
     fin_act.data = false;
 
-
 	std_msgs::Int32 check_num;
 
-    
 	ros::Rate loop_rate(0.5);
 
 	while(ros::ok()){
 			
         if(pick == "pick"){
-            
+
             if(fin_call){
 
                 if(cnt == 5){
                     fin_act.data = true;
                     cnt = 0;
                 }
-                
+
                 check_num.data = Pick[cnt];
                 ROS_INFO("*pick* check_num.data : %d, cnt : %d", check_num.data, cnt);
                 cnt++;
@@ -79,13 +66,10 @@ int main(int argc, char **argv){
             ROS_INFO("%d", check_num);
             fin_call = false;
             ROS_INFO("fin_call false : %d", fin_call);
-            
         }
-
-        if(place == "place"){
+        else if(place == "place"){
 
             if(fin_call){
-    
 
                 if(cnt == 5){
                     fin_act.data = true;
@@ -103,11 +87,9 @@ int main(int argc, char **argv){
             ROS_INFO("%d", check_num);
             fin_call = false;
             ROS_INFO("fin_call false : %d", fin_call);
-            
         }
 
 	ros::spinOnce();
-
 	loop_rate.sleep();
 	}
 }

@@ -10,15 +10,10 @@ ros::Publisher pub_;
 ros::Publisher pubb;
 ros::Publisher error_pub;
 bool arrive_home;
-
 int check_mode;
 
 OpenMani::OpenMani()
-:n(""),
- count(0),
- start_pose(0),
- check(0),
- error_mode(0)
+:n("")
 {
 	joint_name.push_back("joint1");
 	joint_name.push_back("joint2"); 
@@ -55,6 +50,9 @@ bool OpenMani::setTaskSpacePath(std::vector<double> kinematics_pose, double path
 		target_pose.position.x = kinematics_pose.at(0);
 		target_pose.position.y = kinematics_pose.at(1);
 		target_pose.position.z = kinematics_pose.at(2);
+		target_pose.orientation.x = 0;
+		target_pose.orientation.y = 0;
+		target_pose.orientation.z = 0;
 		
 		move_group_->setPositionTarget(
 			target_pose.position.x,
@@ -147,7 +145,6 @@ bool OpenMani::setToolControl(std::vector<double> joint_angle)
 
 }
 
-
 void OpenMani::updateRobotState()
 {
 	ros::AsyncSpinner spinner(1); 
@@ -220,7 +217,7 @@ void OpenMani::demoSequence()
 			ROS_INFO("mani_error_pub");
 			
 			error_pub.publish(error);
-			kinematic_pose_sub.clear();
+			//kinematic_pose_sub.clear();
 
 			check_mode = 3;
 			
@@ -262,7 +259,6 @@ void OpenMani::demoSequence()
         
         pubb.publish(T);
     }
-
 }
 
 void OpenMani::publishCallback(const ros::TimerEvent&)
@@ -301,24 +297,19 @@ int main(int argc, char **argv){
 	
 	ros::NodeHandle nh("");
 
-	// kinematic_pose_sub.clear();
-	// kinematic_pose_sub.push_back(0.0);
-	// kinematic_pose_sub.push_back(0.0); 
-	// kinematic_pose_sub.push_back(0.0);
+	kinematic_pose_sub.clear();
+	kinematic_pose_sub.push_back(0.0);
+	kinematic_pose_sub.push_back(0.0); 
+	kinematic_pose_sub.push_back(0.0);
 
 	ros::Subscriber sub_ = nh.subscribe("a_about_m_pos", 10, PoseCallback); //sub aruco xyz
-
 	ros::Timer publish_timer = nh.createTimer(ros::Duration(1.3), &OpenMani::publishCallback, &OpenMani);
-	
-	ros::Subscriber sub = nh.subscribe("check_mode", 10, checkmode);
+	ros::Subscriber sub = nh.subscribe("check_mode", 10, checkmode); //it tells you what to do
 
-	
 	
 	pub_ = nh.advertise<geometry_msgs::Pose>("mani_pos", 10); //arm xyz pub
-
-    pubb = nh.advertise<std_msgs::Bool>("fin_act", 10);
-
-	error_pub = nh.advertise<std_msgs::Bool>("mani_error", 10);
+    pubb = nh.advertise<std_msgs::Bool>("fin_act", 10); //동작 끝나면 끝났다고 전송하는 pub
+	error_pub = nh.advertise<std_msgs::Bool>("mani_error", 10); //when arm can not reach
 	
 	while (ros::ok())
 	{
