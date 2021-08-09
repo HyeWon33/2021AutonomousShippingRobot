@@ -202,6 +202,7 @@ void OpenMani::demoSequence()
 
     if(check_mode == 3)
 	{
+
         ROS_INFO("move");
 		// kinematic_pose_sub.clear();
         // kinematic_pose_sub.push_back(0.164);
@@ -250,6 +251,7 @@ void OpenMani::demoSequence()
         joint_angle.push_back(-1.000);
         joint_angle.push_back(0.321);
         joint_angle.push_back(0.707);
+
         setJointSpacePath(joint_angle, 2.0);
         ROS_INFO("zero_pose");
         ros::Duration(2.0).sleep();
@@ -293,6 +295,8 @@ int main(int argc, char **argv){
 		return false;
 	
 	ros::NodeHandle nh("");
+
+	ROS_INFO("main");
 
 	kinematic_pose_sub.clear();
 	kinematic_pose_sub.push_back(0.0);
